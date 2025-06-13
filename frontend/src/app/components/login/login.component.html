@@ -1,0 +1,36 @@
+<div class="login-outer">
+  <div class="form login-container">
+    <form (ngSubmit)="login()" class="login-form">
+      
+      <div class="form-group block-cube block-input">
+        <input id="username" [(ngModel)]="username" name="username" required placeholder="Username" />
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="form-group block-cube block-input">
+        <input id="password" type="password" [(ngModel)]="password" name="password" required placeholder="Password" />
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <button type="submit" class="btn block-cube block-cube-hover">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text">Einloggen</span>
+      </button>
+
+      <button type="button" (click)="gotoRegister()" class="btn block-cube block-cube-hover register-btn">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text">Neu registrieren</span>
+      </button>
+
+      <div class="error" *ngIf="error">{{ error }}</div>
+    </form>
+  </div>
+</div>

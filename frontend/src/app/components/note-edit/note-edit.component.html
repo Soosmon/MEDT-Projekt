@@ -1,0 +1,36 @@
+<div class="note-edit-popup">
+  <div class="note-edit-container">
+    <div class="note-edit-title">{{ internalNote.id ? 'Notiz bearbeiten' : 'Neue Notiz erstellen' }}</div>
+    <form (ngSubmit)="saveNote()" class="note-form">
+      <label for="title">Titel</label>
+      <input id="title" [(ngModel)]="internalNote.title" name="title" placeholder="Titel" required />
+
+      <label for="content">Inhalt</label>
+      <textarea id="content" [(ngModel)]="internalNote.content" name="content" placeholder="Inhalt" rows="4"></textarea>
+
+      <div class="note-edit-actions">
+        <button type="submit" class="note-action-btn">{{ internalNote.id ? 'Änderungen speichern' : 'Speichern' }}</button>
+      </div>
+
+      <div *ngIf="internalNote.id">
+        <label for="collaborator">Collaborator auswählen</label>
+        <select id="collaborator" [(ngModel)]="selectedCollaboratorId" name="collaborator" (change)="addCollaborator()">
+          <option value="">-- Benutzer wählen --</option>
+          <option *ngFor="let user of users" [value]="user.id" [disabled]="isUserDisabled(user)">
+            {{user.username}}
+          </option>
+        </select>
+        <div *ngIf="addCollabError" style="color:#d32f2f; font-size:0.95em; margin-top:2px;">{{addCollabError}}</div>
+        <div *ngIf="collaborators.length > 0" class="collaborator-list">
+          <b>Collaborators:</b>
+          <ul>
+            <li *ngFor="let c of collaborators">
+              <span class="collab-user">User ID: {{c.userId}} <span *ngIf="c.role">({{c.role}})</span></span>
+              <button type="button" class="remove-collab-btn" (click)="removeCollaborator(c.id)">Entfernen</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

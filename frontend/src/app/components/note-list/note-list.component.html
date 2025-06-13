@@ -1,0 +1,31 @@
+<div class="note-list-outer">
+  <div class="userbar-fixed">
+    <span class="material-icons" style="vertical-align:middle; margin-right:0.3rem;">account_circle</span>
+    <span class="username-label" style="vertical-align:middle; font-weight:600; font-family:inherit; color:#ffb199; margin-right:1.1rem;">{{ username }}</span>
+    <button (click)="logout()" class="note-action-btn logout-btn-fixed">Abmelden</button>
+  </div>
+  <div class="note-list-container">
+    <!-- userbar entfernt, stattdessen oben rechts -->
+    <div class="center-row">
+      <button (click)="showCreateForm = !showCreateForm" class="note-action-btn add-note-btn">
+        {{ showCreateForm ? 'Abbrechen' : 'Neue Notiz erstellen' }}
+      </button>
+    </div>
+    <app-note-edit *ngIf="showCreateForm" (noteSaved)="onNoteSaved()"></app-note-edit>
+    <!-- Hinweis entfernt: Keine Notizen vorhanden -->
+    <ul class="note-list">
+      <li *ngFor="let note of notes" class="note-item">
+        <div class="note-title">{{note.title}}</div>
+        <div class="note-content">{{note.content}}</div>
+        <div class="note-meta">
+          <span *ngIf="note.lastEditorName">Zuletzt geändert von: {{note.lastEditorName}}</span>
+        </div>
+        <div class="center-row">
+          <button (click)="editNote(note)" class="note-action-btn">Bearbeiten</button>
+          <button (click)="deleteNote(note)" class="delete-note-btn">Löschen</button>
+        </div>
+        <app-note-edit *ngIf="editingNote && editingNote.id === note.id" [note]="editingNote" (noteSaved)="onNoteSaved()"></app-note-edit>
+      </li>
+    </ul>
+  </div>
+</div>

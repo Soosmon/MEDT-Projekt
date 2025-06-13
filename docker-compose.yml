@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8
+    container_name: notes-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: notesdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    container_name: notes-backend
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: notesdb
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: notes-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend

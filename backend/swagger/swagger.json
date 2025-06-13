@@ -1,0 +1,273 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Notiz-App API – Echtzeit-Kollaboration",
+    "version": "1.0.0",
+    "description": "API-Dokumentation für die Full-Stack Notiz-App mit Angular, Express.js, MySQL und WebSocket-Unterstützung.\n\n**Features:**\n- Benutzer-Registrierung & Login\n- Notizen CRUD (Erstellen, Lesen, Bearbeiten, Löschen)\n- Kollaboratoren-Verwaltung\n- Echtzeit-Updates via WebSocket (Event: `notesChanged`)\n\n**Hinweis:**\nAlle Endpunkte erwarten und liefern JSON. Authentifizierung erfolgt per JWT-Token im Header."
+  },
+  "servers": [
+    { "url": "http://localhost:3000" }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Benutzer registrieren",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              },
+              "examples": {
+                "Beispiel": {
+                  "value": { "username": "max", "password": "geheim" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Benutzer erfolgreich registriert" },
+          "400": { "description": "Fehlende oder ungültige Daten" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Benutzer-Login (JWT-Token erhalten)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              },
+              "examples": {
+                "Beispiel": {
+                  "value": { "username": "max", "password": "geheim" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login erfolgreich, JWT-Token wird zurückgegeben",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                },
+                "examples": {
+                  "Beispiel": {
+                    "value": { "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6..." }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Ungültige Zugangsdaten" }
+        }
+      }
+    },
+    "/api/notes": {
+      "get": {
+        "summary": "Alle Notizen abrufen",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID des eingeloggten Users"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste aller Notizen",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Note" } }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Neue Notiz erstellen",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NoteInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Notiz erstellt",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Note" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notes/{id}": {
+      "get": {
+        "summary": "Notiz nach ID abrufen",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notiz gefunden",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Note" }
+              }
+            }
+          },
+          "404": { "description": "Notiz nicht gefunden" }
+        }
+      },
+      "put": {
+        "summary": "Notiz aktualisieren",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NoteInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Notiz aktualisiert" }
+        }
+      },
+      "delete": {
+        "summary": "Notiz löschen",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Notiz gelöscht" }
+        }
+      }
+    },
+    "/api/collaborators/{noteId}": {
+      "get": {
+        "summary": "Kollaboratoren für eine Notiz abrufen",
+        "parameters": [
+          { "name": "noteId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste der Kollaboratoren",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Collaborator" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/collaborators": {
+      "post": {
+        "summary": "Kollaborator hinzufügen",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CollaboratorInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Kollaborator hinzugefügt",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Collaborator" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/collaborators/{noteId}/{userId}": {
+      "delete": {
+        "summary": "Kollaborator von einer bestimmten Notiz entfernen",
+        "parameters": [
+          { "name": "noteId", "in": "path", "required": true, "schema": { "type": "integer" }, "description": "ID der Notiz" },
+          { "name": "userId", "in": "path", "required": true, "schema": { "type": "integer" }, "description": "ID des zu entfernenden Users" }
+        ],
+        "responses": {
+          "200": { "description": "Kollaborator von Notiz entfernt" },
+          "404": { "description": "Kollaborator oder Notiz nicht gefunden" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Note": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "ownerId": { "type": "integer" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "NoteInput": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "ownerId": { "type": "integer" }
+        },
+        "required": ["title", "content", "ownerId"]
+      },
+      "Collaborator": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "noteId": { "type": "integer" },
+          "userId": { "type": "integer" },
+          "role": { "type": "string" }
+        }
+      },
+      "CollaboratorInput": {
+        "type": "object",
+        "properties": {
+          "noteId": { "type": "integer" },
+          "userId": { "type": "integer" },
+          "role": { "type": "string" }
+        },
+        "required": ["noteId", "userId", "role"]
+      }
+    }
+  }
+}

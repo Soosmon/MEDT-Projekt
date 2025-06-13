@@ -1,0 +1,42 @@
+<div class="register-outer">
+  <div class="form login-container">
+    <h2>Neues Konto anlegen</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group block-cube block-input">
+        <input id="username" type="text" formControlName="username" required placeholder="Username" />
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <div class="form-group block-cube block-input">
+        <input id="password" type="password" formControlName="password" required placeholder="Password" />
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+      </div>
+
+      <button type="submit" class="btn block-cube block-cube-hover" [disabled]="registerForm.invalid">
+        <div class="bg-top"><div class="bg-inner"></div></div>
+        <div class="bg-right"><div class="bg-inner"></div></div>
+        <div class="bg"><div class="bg-inner"></div></div>
+        <span class="text">Registrieren</span>
+      </button>
+
+      <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="error">
+        Benutzername ist erforderlich.
+      </div>
+      <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
+        Passwort ist erforderlich.
+      </div>
+
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+    </form>
+
+    <div class="login-link">
+      Bereits registriert? <a routerLink="/login">Zum Login</a>
+    </div>
+  </div>
+</div>
