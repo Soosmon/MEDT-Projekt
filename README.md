@@ -1,6 +1,6 @@
 # Notiz-App
 
-## Projektübersicht
+## Übersicht
 
 Die Notiz-App ist eine Fullstack-Webanwendung für kollaboratives Notizmanagement in Echtzeit. Benutzer können sich registrieren, einloggen, Notizen erstellen, bearbeiten, teilen und gemeinsam bearbeiten. Änderungen werden sofort per WebSocket an alle verbundenen Nutzer übertragen.
 
@@ -12,12 +12,10 @@ Die Notiz-App ist eine Fullstack-Webanwendung für kollaboratives Notizmanagemen
 - API-Dokumentation: Swagger UI (OpenAPI 3)
 - Containerisierung: Docker & Docker Compose
 
-## Ausführen des Projekts
+## Ausführen
 
 ### Voraussetzungen
-- Docker und Docker Compose installiert
-
-### Schritte
+- [Docker](https://www.docker.com/) und [Docker Compose](https://docs.docker.com/compose/) installiert
 
 #### Frontend bauen
 ```powershell
@@ -31,7 +29,7 @@ ng build --configuration=production
 docker-compose up --build
 ```
 
-Dies startet:
+Damit wird ... gestartet:
 - Die MySQL-Datenbank (mit automatischer Initialisierung)
 - Das Express-Backend (serviert auch die Angular-App und WebSocket-Server)
 - Das Angular-Frontend (über Nginx)
