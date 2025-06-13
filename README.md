@@ -17,14 +17,14 @@ Die Notiz-App ist eine Fullstack-Webanwendung für kollaboratives Notizmanagemen
 ### Voraussetzungen
 - [Docker](https://www.docker.com/) und [Docker Compose](https://docs.docker.com/compose/) installiert
 
-#### Frontend bauen
+1. #### Frontend bauen
 ```powershell
 cd frontend
 npm install
 ng build --configuration=production
 ```
 
-#### Alle Container starten
+2. #### Alle Container starten
 ```powershell
 docker-compose up --build
 ```
@@ -34,7 +34,7 @@ Automatisch gestartet:
 - Das Express-Backend (serviert auch die Angular-App und WebSocket-Server)
 - Das Angular-Frontend (über Nginx)
 
-----------------------------------------------------------------
+---
 
 #### Zugriff auf die Anwendung
 - Web-App: http://localhost:4200
