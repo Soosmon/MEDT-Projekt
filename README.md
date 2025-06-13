@@ -29,10 +29,13 @@ ng build --configuration=production
 docker-compose up --build
 ```
 
+
 Damit wird ... gestartet:
 - Die MySQL-Datenbank (mit automatischer Initialisierung)
 - Das Express-Backend (serviert auch die Angular-App und WebSocket-Server)
 - Das Angular-Frontend (über Nginx)
+
+----------------------------------------------------------------
 
 #### Zugriff auf die Anwendung
 - Web-App: http://localhost:4200
